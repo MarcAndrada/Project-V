@@ -4,27 +4,30 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    enum MovementState { IDLE, WALKING, INTERACTING, STUNNED}
-    MovementState currentMovementState = MovementState.IDLE;
+    public enum MovementState { IDLE, WALKING, INTERACTING, STUNNED}
+    public MovementState currentMovementState = MovementState.IDLE;
 
     //Input
-    //InputController inputSystem;
+    InputController inputSystem;
 
     [Header("Movement")]
     [SerializeField]
     private float speed;
-    private float movementDirection;
+
+    private Vector2 movementDirection;
+
 
     private Rigidbody rb;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        inputSystem = GetComponent<InputController>();
     }
-    // Update is called once per frame
+ 
     void Update()
     {
-        
+        movementDirection = inputSystem.movementInput;
     }
 
     private void FixedUpdate()
@@ -42,13 +45,12 @@ public class PlayerController : MonoBehaviour
                 break;
             default:
                 break;
-                
         }
     }
 
     private void Move()
     {
-        movementDirection = inputSystem.movementInput;
-        rb.AddForce(new Vector3(speed * movementDirection, 0f, speed * movementDirection));
+        //rb.AddForce(new Vector3(speed * movementDirection.x, 0f, speed * movementDirection.y));
+        rb.velocity = new Vector3(speed * movementDirection.x * Time.deltaTime, 0f, speed * movementDirection.y * Time.deltaTime);
     }
 }
