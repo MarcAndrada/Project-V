@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 1602487663727716792}
   - component: {fileID: 8445532988712585516}
   - component: {fileID: 1384345029205752904}
+  - component: {fileID: 4260886464758738018}
   m_Layer: 0
   m_Name: CapsulePlayer
   m_TagString: Untagged
@@ -101,8 +102,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentMovementState: 0
-  speed: 400
-  knockback: -5
+  walkingSpeed: 400
+  grabbingSpeed: 350
+  knockback: -14
 --- !u!114 &8731559386555631089
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146,6 +148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveAction: {fileID: 4358475744691039278, guid: 9fdff16631c358445b13018a4c28e2e5, type: 3}
+  grabbing: {fileID: -4770704087938575543, guid: 9fdff16631c358445b13018a4c28e2e5, type: 3}
 --- !u!136 &8445532988712585516
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -177,8 +180,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8524464512056114130}
   serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
+  m_Mass: 0.6
+  m_Drag: 4
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -195,4 +198,25 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 116
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
+--- !u!65 &4260886464758738018
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8524464512056114130}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1.6, z: 0.5581975}
+  m_Center: {x: 0, y: 0, z: 0.48761725}
