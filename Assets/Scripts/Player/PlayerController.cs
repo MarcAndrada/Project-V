@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public enum MovementState { IDLE, WALKING, INTERACTING, STUNNED}
-    public MovementState currentMovementState = MovementState.IDLE;
+    public enum MovementState { WALKING, INTERACTING, STUNNED}
+    public MovementState currentMovementState = MovementState.WALKING;
 
     //Input
     InputController inputSystem;
@@ -18,6 +18,9 @@ public class PlayerController : MonoBehaviour
 
 
     private Rigidbody rb;
+
+    [SerializeField]
+    private float knockback;
 
     private void Awake()
     {
@@ -34,14 +37,13 @@ public class PlayerController : MonoBehaviour
     {
         switch (currentMovementState)
         {
-            case MovementState.IDLE:
-                break;
             case MovementState.WALKING:
                 Move();
                 break;
             case MovementState.INTERACTING:
                 break; 
             case MovementState.STUNNED:
+                Stunned();
                 break;
             default:
                 break;
@@ -52,5 +54,30 @@ public class PlayerController : MonoBehaviour
     {
         //rb.AddForce(new Vector3(speed * movementDirection.x, 0f, speed * movementDirection.y));
         rb.velocity = new Vector3(speed * movementDirection.x * Time.deltaTime, 0f, speed * movementDirection.y * Time.deltaTime);
+    }
+
+    private void HitByFire(Vector3 fireCenter)
+    {
+        Vector3 vectorToKnockBack = fireCenter - this.transform.position;
+        //this.transform.position = this.transform.position - vectorToKnockBack;
+        currentMovementState = MovementState.STUNNED;
+        rb.AddForce(vectorToKnockBack.normalized * knockback, ForceMode.Impulse);
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.collider.CompareTag("Fire"))
+        {
+            Vector3 fireCenter = collision.transform.position;
+            HitByFire(fireCenter);
+        }
+    }
+
+    private void Stunned()
+    {
+        if(rb.velocity.sqrMagnitude < 0.1f)
+        {
+            currentMovementState = MovementState.WALKING;
+        }
     }
 }
