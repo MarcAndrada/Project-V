@@ -17,6 +17,7 @@ public class InputController : MonoBehaviour
 
     public Vector2 movementInput { get; private set; }
 
+
     private void Awake()
     {
         pController = GetComponent<PlayerController>();

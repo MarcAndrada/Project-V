@@ -16,7 +16,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float grabbingSpeed;
     private float speed;
-    
+    [SerializeField]
+    private float acceleration;
+
+    [SerializeField]
     private Vector2 movementDirection;
 
 
@@ -40,8 +43,6 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         movementDirection = inputSystem.movementInput;
-
-        
     }
 
     private void FixedUpdate()
@@ -81,10 +82,29 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void Acceleration()
+    {
+        if (movementDirection.x >= 0.01f || movementDirection.y >= 0.01f)
+        {
+            acceleration += Time.deltaTime;
+            if (acceleration >= 1f)
+                acceleration = 1f;
+
+        }
+        else if(movementDirection.x <= 0.1f || movementDirection.y <= 0.1f)
+        {
+            acceleration -= Time.deltaTime;
+            if (acceleration <= 0f)
+                acceleration = 0f;
+        }
+    }
     private void Move()
     {
-        rb.velocity = new Vector3(speed * movementDirection.x * Time.deltaTime, 0f, speed * movementDirection.y * Time.deltaTime);
+        Acceleration();
+        rb.velocity = new Vector3(speed * movementDirection.x * acceleration * Time.deltaTime, 0f, speed * movementDirection.y * acceleration * Time.deltaTime);
     }
+
+    
 
     private void HitByFire(Vector3 fireCenter)
     {
