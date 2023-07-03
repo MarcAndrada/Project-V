@@ -4,8 +4,7 @@ using UnityEngine;
 
 [CreateAssetMenu(fileName = "New KeyObject", menuName = "KeyObject")]
 public class KeyItems : ScriptableObject
-{ 
-  
+{
     private enum keyItem { Axe, Ladder, ScrewDriver, Hammer};
 
     [SerializeField]
