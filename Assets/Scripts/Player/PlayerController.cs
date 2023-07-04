@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     private float speed;
     [SerializeField]
     private float acceleration;
+    public float speedPenalty { private get; set; }
 
     [SerializeField]
     private Vector2 movementDirection;
@@ -29,6 +30,8 @@ public class PlayerController : MonoBehaviour
     private float knockback;
 
     BoxCollider objectCollider;
+
+    
 
 
     private void Awake()
@@ -86,24 +89,36 @@ public class PlayerController : MonoBehaviour
     {
         if (movementDirection.x >= 0.01f || movementDirection.y >= 0.01f)
         {
-            acceleration += Time.deltaTime;
+            acceleration += Time.deltaTime + 0.06f;
             if (acceleration >= 1f)
                 acceleration = 1f;
 
         }
-        else if(movementDirection.x <= 0.1f || movementDirection.y <= 0.1f)
+        else if (movementDirection.x <= -0.1f || movementDirection.y <= -0.1f)
+        {
+            acceleration += Time.deltaTime;
+            if (acceleration >= 1f)
+                acceleration = 1f;
+        }
+        else if (movementDirection.x <= 0.01f && movementDirection.y <= 0.01f || movementDirection.x >= 0.01f && movementDirection.y >= 0.01f)
         {
             acceleration -= Time.deltaTime;
             if (acceleration <= 0f)
                 acceleration = 0f;
         }
     }
+
     private void Move()
     {
         Acceleration();
-        rb.velocity = new Vector3(speed * movementDirection.x * acceleration * Time.deltaTime, 0f, speed * movementDirection.y * acceleration * Time.deltaTime);
+        rb.velocity = new Vector3(speed * movementDirection.x  * acceleration * Time.deltaTime, 0f, speed * movementDirection.y * acceleration * Time.deltaTime);
     }
-
+    private void Move(float speedToReduce)
+    {
+        float reducedSpeed = speed - speedToReduce;
+        Acceleration();
+        rb.velocity = new Vector3(reducedSpeed * movementDirection.x * Time.deltaTime, 0f, reducedSpeed * movementDirection.y * Time.deltaTime);
+    }
     
 
     private void HitByFire(Vector3 fireCenter)
