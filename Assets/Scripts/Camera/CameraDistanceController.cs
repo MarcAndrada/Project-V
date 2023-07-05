@@ -45,7 +45,6 @@ public class CameraDistanceController : MonoBehaviour
             item.transform.position = new Vector3(item.transform.position.x, playersY, item.transform.position.z);
         }
         //colocar la camara a la distancia minima
-        transform.position = GetMiddlePointBetweenPlayers() - transform.forward * minYDistance;
         zOffset = transform.position.z - GetMiddlePointBetweenPlayers().z;
     }
 
@@ -109,6 +108,16 @@ public class CameraDistanceController : MonoBehaviour
     {
         Vector3 destinyPos = transform.position;
 
+        Vector3 middlePos = GetMiddlePointBetweenPlayers();
+
+        Vector3 XZDir = new Vector3
+            (
+            middlePos.x - transform.position.x,
+            0,
+            (middlePos.z + zOffset) - transform.position.z
+            );
+        destinyPos += XZDir * XZSpeed;
+
         if (camState != CameraMovement.NONE)
         {
             float zoomSpeed = 1;
@@ -123,25 +132,19 @@ public class CameraDistanceController : MonoBehaviour
                 default:
                     break;
             }
-            destinyPos -= transform.forward * zoomSpeed;
+            destinyPos += -transform.forward * zoomSpeed;
+            zOffset -= zoomSpeed * Time.fixedDeltaTime;
         }
 
-        Vector3 middlePos = GetMiddlePointBetweenPlayers();
-
-        Vector3 XZDir = new Vector3
-            (
-            middlePos.x - transform.position.x,
-            0,
-            (middlePos.z + zOffset) - transform.position.z
-            );
-        destinyPos += XZDir * XZSpeed;
-
-        transform.position = Vector3.Lerp
+        Vector3 finalPos = Vector3.Lerp
             (
             transform.position,
             destinyPos,
             movementSpeed * Time.fixedDeltaTime
             );
+        finalPos.y = Mathf.Clamp(finalPos.y, minYDistance, Mathf.Infinity);
+
+        transform.position = finalPos;
         
     }
     private Vector3 GetMiddlePointBetweenPlayers()
