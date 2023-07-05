@@ -44,26 +44,33 @@ public class WallInteractions : MonoBehaviour
 
     [SerializeField]
     private bool canInteract = false;
+
     private void OnTriggerEnter(Collider other)
     {
-        if (keyItems == item.GetItem() && other.CompareTag("KeyItem") && !canInteract) //Faltaría pasarle que el player esta sujetando un objeto, porque si no simplemene podrá interecturar aun estando el objeto en el suelo
+        if (keyItems == item.GetItem() && other.CompareTag("KeyItem") && !canInteract && !canTakeLadder) //Faltaría pasarle que el player esta sujetando un objeto, porque si no simplemene podrá interecturar aun estando el objeto en el suelo
         {
             canInteract = true;
             allow.SetActive(true);
-            prohibited.SetActive(false);
+            prohibited.SetActive(false); //Por si acaso
         }
         else if (canTakeLadder && other.CompareTag("Player"))
         {
+            canInteract = true;
             allow.SetActive(true);
+        }
+        else if(keyItems != item && other.CompareTag("KeyItem") && !canInteract)
+        {
+            prohibited.SetActive(true);
         }
         else
         {
-            prohibited.SetActive(true);
+            allow.SetActive(false);
+            prohibited.SetActive(false);
         }
     }
     private void OnTriggerExit(Collider other) 
     {
-        if (keyItems == item.GetItem() && other.CompareTag("KeyItem") && canInteract)
+        if (keyItems == item.GetItem() && other.CompareTag("KeyItem") && canInteract && !canTakeLadder)
         {
             canInteract = false;
             allow.SetActive(false);
@@ -71,6 +78,7 @@ public class WallInteractions : MonoBehaviour
         }
         else if (canTakeLadder && other.CompareTag("Player")) 
         {
+            canInteract= false;
             allow.SetActive(false);
         }
     }
@@ -78,17 +86,17 @@ public class WallInteractions : MonoBehaviour
     {
         if(canInteract && Input.GetKeyDown(KeyCode.Q) && !canTakeLadder)
         {
-            if(keyItems == stairs && !canTakeLadder)
+            if(keyItems == stairs)
             {
                 MoveStairs();
-               
+                item.SetRb();
             }
             else
             {
                 DestroyWall();
             }
         }
-        else if(Input.GetKeyDown(KeyCode.E) && canTakeLadder)
+        else if(Input.GetKeyDown(KeyCode.E) && canTakeLadder && canInteract)
         {
             TakeLadder();
         }
