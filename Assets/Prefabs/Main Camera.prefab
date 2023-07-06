@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1491701993758047083}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 3.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -108,7 +108,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3605894096269600715}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 3.9, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -276,11 +276,11 @@ MonoBehaviour:
   camState: 0
   players:
   - {fileID: 0}
-  - {fileID: 0}
   minYDistance: 10
+  zOffset: -15
   insideCamera: {fileID: 3926395861688165838}
   externalCamera: {fileID: 6552450789520782717}
   movementSpeed: 0.2
-  zoomOutSpeed: 30
+  zoomOutSpeed: 25
   zoomInSpeed: 6
   XZSpeed: 7

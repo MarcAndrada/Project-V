@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraDistanceController : MonoBehaviour
+public class CameraController : MonoBehaviour
 {
     private enum CameraMovement { NONE, ZOOM_IN, ZOOM_OUT };
 
@@ -11,9 +11,10 @@ public class CameraDistanceController : MonoBehaviour
 
 
     [Header("Players"), SerializeField]
-    private Collider[] players;
+    private List<Collider> players;
     [Header("Players Variables"), SerializeField]
     private float minYDistance;
+    [SerializeField]
     private float zOffset;
     private float playersY;
 
@@ -48,6 +49,15 @@ public class CameraDistanceController : MonoBehaviour
         zOffset = transform.position.z - GetMiddlePointBetweenPlayers().z;
     }
 
+    public void AddPlayer(GameObject _newPlayer)
+    {
+        players.Add(_newPlayer.GetComponent<CapsuleCollider>());
+        _newPlayer.transform.position = new Vector3(_newPlayer.transform.position.x, playersY, _newPlayer.transform.position.z);
+    }
+    public void RemovePlayer(GameObject _removablePlayer)
+    {
+        players.Remove(_removablePlayer.GetComponent<CapsuleCollider>());
+    }
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -156,14 +166,16 @@ public class CameraDistanceController : MonoBehaviour
             middlePoint += item.transform.position;
         }
         middlePoint.y = playersY;
-        middlePoint /= players.Length;
+        middlePoint /= players.Count;
         return middlePoint;
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.magenta;
-        Gizmos.DrawWireSphere(GetMiddlePointBetweenPlayers(),0.2f);
+        Gizmos.DrawSphere(GetMiddlePointBetweenPlayers(),0.4f);
     }
 
+
+    
 }
