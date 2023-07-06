@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class JointController : MonoBehaviour
 {
+    [SerializeField]
     private float km;
+    [SerializeField]
     private Vector2 ln;
 
     [SerializeField]
@@ -16,7 +18,7 @@ public class JointController : MonoBehaviour
 
     private void Awake()
     {
-        km = 0.3f;
+        km = 8f;
         player2 =  FindObjectOfType<GameObject>();
         ln.x = 50f;
         ln.y = 100f;
@@ -38,8 +40,10 @@ public class JointController : MonoBehaviour
     {
         Vector3 force = Vector3.zero;
 
+        force.y = player1.transform.position.y; 
+
         force.x = -km * (ln.x - (player1.transform.position.x - player2.transform.position.x));
-        force.y = -km * (ln.y - (player1.transform.position.y - player2.transform.position.y));
+        force.y = -km * (ln.y - (player1.transform.position.z - player2.transform.position.z));
         return force;
     }
 }
