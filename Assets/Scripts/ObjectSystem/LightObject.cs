@@ -21,12 +21,7 @@ public class LightObject : ValuableObject
         Pan,
         Ball,
         Book,
-        Microwave,
-        Sofa,
-        TV,
-        OfficeTable,
-        LockedSafe,
-        Lamp 
+        Microwave
     }
 
     [SerializeField] private _itemType _item;

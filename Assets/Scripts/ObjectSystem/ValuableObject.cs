@@ -7,17 +7,17 @@ public class ValuableObject : Object
     [SerializeField]
     protected int Score;
     
-    [Range(0.1f, 5f)]
+    [Range(0.1f, 0.99f)]
     [SerializeField]
     protected float SpeedReduce;
 
 
-    protected int ReturnScore()
+    protected int GetScore()
     {
         return Score;
     }
 
-    protected float ReturnSpeedAmount()
+    protected float GetSpeedAmount()
     {
         return SpeedReduce;
     }
