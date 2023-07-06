@@ -22,32 +22,32 @@ public class WallInteractions : MonoBehaviour
     private GameObject prohibited;
 
     [SerializeField]
-    private GameObject LadderDestination;
+    private Transform LadderDestination;
 
     [SerializeField]
-    private GameObject PlayerUpDestination;
+    private Transform PlayerUpDestination;
 
     [SerializeField]
-    private GameObject PlayerDownDestination;
+    private Transform PlayerDownDestination;
 
     [SerializeField]
     private GameObject Player;
 
     [SerializeField]
-    private bool isUpLadder = false; //Esto estara en el player controller
+    private bool isUpLadder; //Esto estara en el player controller
 
     [SerializeField]
     private float speed;
 
     [SerializeField]
-    private bool canTakeLadder = false;
+    private bool canTakeLadder;
 
     [SerializeField]
-    private bool canInteract = false;
+    private bool canInteract;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (keyItems == item.GetItem() && other.CompareTag("KeyItem") && !canInteract && !canTakeLadder) //Faltaría pasarle que el player esta sujetando un objeto, porque si no simplemene podrá interecturar aun estando el objeto en el suelo
+        if (keyItems == item.GetItem() && other.CompareTag("KeyItem") && !canInteract && !canTakeLadder) //Faltarï¿½a pasarle que el player esta sujetando un objeto, porque si no simplemene podrï¿½ interecturar aun estando el objeto en el suelo
         {
             canInteract = true;
             allow.SetActive(true);
@@ -106,7 +106,7 @@ public class WallInteractions : MonoBehaviour
     {
         allow.SetActive(false);
         prohibited.SetActive(false);
-        item.transform.position = Vector3.MoveTowards(item.transform.position, LadderDestination.transform.position, speed);
+        item.transform.position = Vector3.MoveTowards(item.transform.position, LadderDestination.position, speed);
         canTakeLadder = true;
     }
 
@@ -121,16 +121,13 @@ public class WallInteractions : MonoBehaviour
     {
         if(!isUpLadder)
         {
-            Player.transform.position = Vector3.MoveTowards(Player.transform.position, PlayerUpDestination.transform.position, speed);
+            Player.transform.position = Vector3.MoveTowards(Player.transform.position, PlayerUpDestination.position, speed);
             isUpLadder = true;
         }
         else if (isUpLadder)
         {
-            Player.transform.position = Vector3.MoveTowards(Player.transform.position, PlayerDownDestination.transform.position, speed);
+            Player.transform.position = Vector3.MoveTowards(Player.transform.position, PlayerDownDestination.position, speed);
             isUpLadder = false;
         }
-       
     }
-
-
 }
