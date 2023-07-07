@@ -1,15 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 using UnityEngine.InputSystem;
-using Unity.VisualScripting;
-using UnityEditor;
+
 
 public class PlayersReadyController : MonoBehaviour
 {
-    const int MAX_PLAYERS = 1;
+    const int MAX_PLAYERS = 2;
 
     [SerializeField]
     private MultiplePlayerController multiplayerController;
