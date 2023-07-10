@@ -175,6 +175,7 @@ public class PlayerController : MonoBehaviour
 
     public void Interact()
     {
+        Debug.Log("UwU");
         if (currentMovementState == MovementState.WALKING)
         {
             ChangeState(MovementState.GRABBING);
