@@ -45,9 +45,16 @@ public class WallInteractions : MonoBehaviour
     [SerializeField]
     private bool canInteract;
 
+    private TakeObjects objectTaken;
+
+    private void Awake()
+    {
+        objectTaken = GetComponent<TakeObjects>();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        if (keyItems == item.GetItem() && other.CompareTag("KeyItem") && !canInteract && !canTakeLadder) //Faltar�a pasarle que el player esta sujetando un objeto, porque si no simplemene podr� interecturar aun estando el objeto en el suelo
+        if (keyItems == item.GetItem() && other.CompareTag("Player") && !canInteract && !canTakeLadder && objectTaken.GetPickedObject()) //Faltar�a pasarle que el player esta sujetando un objeto, porque si no simplemene podr� interecturar aun estando el objeto en el suelo
         {
             canInteract = true;
             allow.SetActive(true);
@@ -58,7 +65,7 @@ public class WallInteractions : MonoBehaviour
             canInteract = true;
             allow.SetActive(true);
         }
-        else if(keyItems != item && other.CompareTag("KeyItem") && !canInteract)
+        else if(keyItems != item && other.CompareTag("Player") && !canInteract)
         {
             prohibited.SetActive(true);
         }
@@ -70,7 +77,7 @@ public class WallInteractions : MonoBehaviour
     }
     private void OnTriggerExit(Collider other) 
     {
-        if (keyItems == item.GetItem() && other.CompareTag("KeyItem") && canInteract && !canTakeLadder)
+        if (keyItems == item.GetItem() && other.CompareTag("Player") && canInteract && !canTakeLadder)
         {
             canInteract = false;
             allow.SetActive(false);
@@ -101,6 +108,8 @@ public class WallInteractions : MonoBehaviour
             TakeLadder();
         }
     }
+
+    
 
     private void MoveStairs()
     {
