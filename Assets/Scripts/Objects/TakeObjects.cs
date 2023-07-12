@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
+using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 using static UnityEditor.Progress;
 
@@ -19,7 +20,9 @@ public class TakeObjects : MonoBehaviour
     [SerializeField]
     private LayerMask objectLayer; 
     private Rigidbody pickedObjectRB;
-    private Collider pickedObjectCollider; 
+    private Collider pickedObjectCollider;
+
+    private Keyitem item;
 
     private void Update()
     {
@@ -39,16 +42,20 @@ public class TakeObjects : MonoBehaviour
 
     private void TakeNearestObject(GameObject _nearestObject)
     {
-        Debug.Log("entra"); 
         pickedObject = true;
         _nearestObject.transform.position = handPoint.position;
 
         // Desactivar collision y fisicas
         pickedObjectRB = _nearestObject.GetComponent<Rigidbody>();
         pickedObjectCollider = _nearestObject.GetComponent<Collider>();
+        if(_nearestObject.tag == "KeyItem")
+        {
+            item = _nearestObject.GetComponent<Keyitem>();
+            item.GetItem();
+        }
+
         pickedObjectRB.isKinematic = true;
         pickedObjectCollider.enabled = false;
-
         // Hacerlo hijo
         _nearestObject.transform.SetParent(handPoint.transform);
       
@@ -57,9 +64,8 @@ public class TakeObjects : MonoBehaviour
     {
         GameObject _nearestObject = null; 
         Vector2 playerPos = new Vector2(this.transform.position.x, this.transform.position.z);
-
         Collider[] items = Physics.OverlapSphere(transform.position, areaToSearch, objectLayer);
-        
+
         float smallestDistance = areaToSearch; 
         foreach (Collider item in items)
         {
@@ -69,13 +75,14 @@ public class TakeObjects : MonoBehaviour
             {
                 smallestDistance = currentDistance;
                 _nearestObject = item.gameObject;
+               
             }
         }
         return _nearestObject; 
         Debug.Log(_nearestObject); 
     }
 
-    private void ReleaseObject()
+    public void ReleaseObject()
     {
         Debug.Log("Salgo");
         pickedObject = false;
@@ -86,12 +93,16 @@ public class TakeObjects : MonoBehaviour
         pickedObjectRB.transform.SetParent(null);
         pickedObjectRB = null; 
         pickedObjectCollider = null;
-        
     }
 
     public bool GetPickedObject()
     {
         return pickedObject; 
+    }
+
+    public Keyitem GetItems()
+    {
+        return item;
     }
 
     private void OnDrawGizmos()

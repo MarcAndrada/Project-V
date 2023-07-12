@@ -7,7 +7,6 @@ public class Keyitem : MonoBehaviour
     [SerializeField]
     private KeyItems item;
 
-    [SerializeField]
     private Rigidbody rb;
 
     private void Start()

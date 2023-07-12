@@ -10,6 +10,8 @@ public class KeyItems : ScriptableObject
     [SerializeField]
     private keyItem items;
 
+
+
     public string GetItem()
     {
         return items.ToString();
