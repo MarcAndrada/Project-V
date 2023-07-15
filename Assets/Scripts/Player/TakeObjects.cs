@@ -22,7 +22,7 @@ public class TakeObjects : MonoBehaviour
     private Rigidbody pickedObjectRB;
     private Collider pickedObjectCollider;
 
-    public Keyitem item { get; private set; }
+    public MoveItem item { get; private set; }
 
     private void Awake()
     {
@@ -68,7 +68,7 @@ public class TakeObjects : MonoBehaviour
         pickedObjectCollider = _nearestObject.GetComponent<Collider>();
         if(_nearestObject.tag == "KeyItem")
         {
-            item = _nearestObject.GetComponent<Keyitem>();
+            item = _nearestObject.GetComponent<MoveItem>();
             item.GetItem();
         }
 
@@ -101,7 +101,7 @@ public class TakeObjects : MonoBehaviour
         return pickedObject; 
     }
 
-    public Keyitem GetItems()
+    public MoveItem GetItems()
     {
         return item;
     }

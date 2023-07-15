@@ -11,11 +11,27 @@ public class MoveItem : MonoBehaviour
 
     [SerializeField]
     Score score;
-   
+
+    private Rigidbody rb;
+
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
+
+    public MovingItems GetItem()
+    {
+        return movingItem;
+    }
+
+    public void StopPhysics()
+    {
+        rb.isKinematic = true;
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.collider.CompareTag("Truck"))
+        if(movingItem.GetType() != MovingItems.ItemType.key && collision.collider.CompareTag("Truck"))
         {
             Score();
             Destroy(gameObject);

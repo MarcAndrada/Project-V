@@ -11,7 +11,7 @@ public class WallInteractions : MonoBehaviour
     public WallType wallType;
 
     [Space, SerializeField]
-    public KeyItems.keyItem necessaryItem;
+    public MovingItems.Item necessaryItem;
 
     [SerializeField]
     private GameObject necessaryObjectCanvas;
@@ -26,10 +26,6 @@ public class WallInteractions : MonoBehaviour
     public bool isLadderPlaced { get; private set; }
 
     private PlayerController player;
-
-
-    
-
 
 
     private void Awake()
@@ -48,7 +44,7 @@ public class WallInteractions : MonoBehaviour
 
     } 
 
-    public void PlaceLadder(Keyitem item)
+    public void PlaceLadder(MoveItem item)
     {
         if (!isLadderPlaced)
         {
@@ -75,6 +71,13 @@ public class WallInteractions : MonoBehaviour
         if (other.CompareTag("Player") && !isLadderPlaced)
         {
             necessaryObjectCanvas.SetActive(true);
+        }
+        if(other.CompareTag("InteractionObject"))
+        {
+            if(player.objectsController.item.GetItem().GetItem() == necessaryItem)
+            {
+                DestroyWall();
+            }         
         }
 
     }

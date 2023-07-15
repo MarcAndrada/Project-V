@@ -6,23 +6,23 @@ using UnityEngine;
 public class MovingItems : ScriptableObject
 {
    
-    private enum weightType { light, heavy };
+    public enum ItemType {light, heavy, key };
     [SerializeField]
-    private weightType type;
-    private enum item { Kebab, PosterFiddle, Laptop, Plant, Dog, Cat, CoffeeMug, Chair, Acuarium, Guitar, Pan, Ball, Book, Microwave, Sofa, TV, OfficeTable, LockedSafe, Lamp };
+    private ItemType type;
+    public enum Item { Kebab, PosterFiddle, Laptop, Plant, Dog, Cat, CoffeeMug, Chair, Acuarium, Guitar, Pan, Ball, Book, Microwave, Sofa, TV, OfficeTable, LockedSafe, Lamp, Axe, Ladder, ScrewDriver, Hammer };
     [SerializeField]
-    private item items;
+    private Item items;
 
     [SerializeField]
     private int score;
 
-    public string GetWeight()
+    public ItemType GetType()
     {
-        return type.ToString();
+        return type;
     }
-    public string GetItem()
+    public Item GetItem()
     {
-        return items.ToString();
+        return items;
     }
     public int GetScore()
     {

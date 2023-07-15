@@ -9,6 +9,7 @@ TagManager:
   - KeyItem
   - Fire
   - LadderWall
+  - InteractionObject
   layers:
   - Default
   - TransparentFX

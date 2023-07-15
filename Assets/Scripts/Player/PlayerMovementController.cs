@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerMovementController : MonoBehaviour
 {
-    public enum MovementState { WALKING, GRABBING, STUNNED, INTERACTING, CLIMBING_LADDER }
+    public enum MovementState { WALKING, GRABBING_LIGHT, GRABBING_HEAVY_S, GRABBING_HEAVY_M, STUNNED, INTERACTING, CLIMBING_LADDER }
     public MovementState currentMovementState = MovementState.WALKING;
     
     PlayerController playerController;
@@ -15,6 +15,10 @@ public class PlayerMovementController : MonoBehaviour
     private float walkingSpeed;
     [SerializeField]
     private float grabbingSpeed;
+    [SerializeField]
+    private float grabbingHeavyS;
+    [SerializeField]
+    private float grabbingHeavyM;
     private float speed;
     [SerializeField]
     private float acceleration;
@@ -29,9 +33,8 @@ public class PlayerMovementController : MonoBehaviour
     [SerializeField]
     private float knockback;
 
-    BoxCollider objectCollider;
-
     
+    public BoxCollider objectCollider { get; private set; }
 
 
     private void Awake()
@@ -55,7 +58,9 @@ public class PlayerMovementController : MonoBehaviour
             case MovementState.WALKING:
                 Walking();
                 break;
-            case MovementState.GRABBING:
+            case MovementState.GRABBING_HEAVY_S:
+            case MovementState.GRABBING_HEAVY_M:
+            case MovementState.GRABBING_LIGHT:
                 Grabbing();
                 break;
             case MovementState.STUNNED:
@@ -150,7 +155,9 @@ public class PlayerMovementController : MonoBehaviour
         {
             case MovementState.WALKING:
                 break;
-            case MovementState.GRABBING:
+            case MovementState.GRABBING_HEAVY_S:
+            case MovementState.GRABBING_HEAVY_M:
+            case MovementState.GRABBING_LIGHT:
                 objectCollider.enabled = false;
                 break;
             case MovementState.STUNNED:
@@ -170,7 +177,13 @@ public class PlayerMovementController : MonoBehaviour
             case MovementState.WALKING:
                 speed = walkingSpeed;
                 break;
-            case MovementState.GRABBING:
+            case MovementState.GRABBING_HEAVY_S:
+                speed = grabbingHeavyS;
+                break;
+            case MovementState.GRABBING_HEAVY_M:
+                speed = grabbingHeavyM;
+                break;
+            case MovementState.GRABBING_LIGHT:
                 speed = grabbingSpeed;
                 objectCollider.enabled = true;
                 break;

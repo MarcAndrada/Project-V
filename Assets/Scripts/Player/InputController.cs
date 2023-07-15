@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static PlayerMovementController;
 
 public class InputController : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class InputController : MonoBehaviour
     PlayerController pController;
 
     public Vector2 movementInput { get; private set; }
+
+    [SerializeField]
+    private Collider itemCollider;
 
 
     private void Awake()
@@ -25,15 +29,40 @@ public class InputController : MonoBehaviour
 
     public void OnGrabAction(InputAction.CallbackContext obj)
     {
-        if (obj.action.WasPerformedThisFrame())
+        switch (pController.movementController.currentMovementState)
         {
-            pController.objectsController.CheckCanTakeObject();
+            case PlayerMovementController.MovementState.WALKING:
+            case PlayerMovementController.MovementState.GRABBING_HEAVY_S:
+            case PlayerMovementController.MovementState.GRABBING_HEAVY_M:
+            case PlayerMovementController.MovementState.GRABBING_LIGHT:
+                if (obj.action.WasPerformedThisFrame())
+                {
+                    pController.objectsController.CheckCanTakeObject();
+                    if (pController.objectsController.item != null)
+                    {
+                        switch (pController.objectsController.item.GetItem().GetType())
+                        {
+                            case MovingItems.ItemType.heavy:
+                                pController.movementController.ChangeState(PlayerMovementController.MovementState.GRABBING_HEAVY_S);
+                                break;
+                            case MovingItems.ItemType.light:                             
+                            case MovingItems.ItemType.key:
+                                pController.movementController.ChangeState(PlayerMovementController.MovementState.GRABBING_LIGHT);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+                else if (obj.action.WasReleasedThisFrame())
+                {
+                    pController.objectsController.ReleaseObject();
+                    pController.movementController.ChangeState(PlayerMovementController.MovementState.WALKING);
+                }
+                break;
+            default:
+                break;
         }
-        else if (obj.action.WasReleasedThisFrame())
-        {
-            pController.objectsController.ReleaseObject();
-        }
-
 
     }
 
@@ -43,15 +72,13 @@ public class InputController : MonoBehaviour
         switch (pController.movementController.currentMovementState)
         {
             case PlayerMovementController.MovementState.WALKING:
-            case PlayerMovementController.MovementState.GRABBING:
+            case PlayerMovementController.MovementState.GRABBING_LIGHT:
                 if (pController.ladderController.nearToLadder)
                 {
                     //Subir a la escalera
                     pController.ladderController.StartClimbLadder();
                     break;
                 }
-
-
                 break;
             case PlayerMovementController.MovementState.STUNNED:
                 break;
@@ -66,6 +93,7 @@ public class InputController : MonoBehaviour
 
     public void OnUseItemAction(InputAction.CallbackContext obj) 
     {
+        
         if (obj.action.WasPerformedThisFrame())
         {
 
@@ -75,7 +103,7 @@ public class InputController : MonoBehaviour
                 //Comprobar que objeto llevo en la 
                 switch (pController.objectsController.item.GetItem().GetItem())
                 {
-                    case KeyItems.keyItem.Ladder:
+                    case MovingItems.Item.Ladder:
                         //Si hay un sitio para poener una escalera y no hay ninguna puesta
                         if (
                             pController.ladderController.nearestLadder != null
@@ -86,10 +114,12 @@ public class InputController : MonoBehaviour
                             pController.ladderController.nearestLadder.PlaceLadder(pController.objectsController.item);
                         }
                         break;
-                    case KeyItems.keyItem.Axe:
-                    case KeyItems.keyItem.ScrewDriver:
-                    case KeyItems.keyItem.Hammer:
-                        //Hacer la animacion de ataque
+                    case MovingItems.Item.Axe:
+                    case MovingItems.Item.ScrewDriver:
+                    case MovingItems.Item.Hammer:
+                        //Aqui la animación
+                        itemCollider.enabled = true;
+                        Invoke("DisableCollider", 0.3f);
                         break;
                     default:
                         break;
@@ -100,4 +130,8 @@ public class InputController : MonoBehaviour
         }
     }
 
+    private void DisableCollider()
+    {
+        itemCollider.enabled = false;
+    }
 }
