@@ -7,6 +7,8 @@ TagManager:
   - MoveItem
   - Truck
   - KeyItem
+  tags:
+  - Fire
   layers:
   - Default
   - TransparentFX
