@@ -24,9 +24,27 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Join",
+                    "name": "UseItem",
                     "type": "Button",
-                    "id": "8db5f900-b9eb-4eda-8aed-06c8ebb2bfc3",
+                    "id": "b081368e-445c-4a58-9318-b1b1753d7dbc",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "d27761c9-9d19-4178-bfff-cd4830d9a2b3",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Throw",
+                    "type": "Button",
+                    "id": "124c0267-c180-4399-a9e2-5765dfdfefd8",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -124,23 +142,34 @@
                 },
                 {
                     "name": "",
-                    "id": "6efc9bc2-ee13-48b6-875e-245f45e07ae7",
-                    "path": "<Keyboard>/space",
+                    "id": "6a5821bc-7de9-488d-99ac-324f7d127a8e",
+                    "path": "<Keyboard>/f",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard",
-                    "action": "Join",
+                    "groups": "",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "fd3314b0-52d0-497e-8322-accdd74bab81",
-                    "path": "<Gamepad>/start",
+                    "id": "face6122-9638-442a-a371-be7658bdd04c",
+                    "path": "",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Join",
+                    "groups": "",
+                    "action": "Throw",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c15740ef-35b5-4ad4-b341-88503fd89243",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UseItem",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -163,6 +192,15 @@
                     "name": "GoBack",
                     "type": "Button",
                     "id": "d7d2851d-26dc-4c62-b2af-d00f335c9ea3",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Join",
+                    "type": "Button",
+                    "id": "9e480663-48c0-49d0-90b7-f731b9650a06",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -211,6 +249,28 @@
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "StartGame",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d535099d-0557-411b-8d81-ab6aafe38283",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Join",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a56364bc-c6ce-42b2-8b18-dac6b50a1272",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Join",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

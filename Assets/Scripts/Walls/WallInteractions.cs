@@ -10,223 +10,80 @@ public class WallInteractions : MonoBehaviour
 
     public WallType wallType;
 
-    [SerializeField]
-    KeyItems necesaryItem;
+    [Space, SerializeField]
+    public KeyItems.keyItem necessaryItem;
 
     [SerializeField]
-    private GameObject necesaryObjectCanvas;
-
-    [SerializeField]
-    private GameObject walls;
+    private GameObject necessaryObjectCanvas;
 
     [SerializeField]
     private Transform LadderDestination;
 
+    [Space, Header("Ladder Climbing"), SerializeField]
+    public Transform PlayerUpDestination;
     [SerializeField]
-    private Transform PlayerUpDestination;
+    public Transform[] PlayerDownDestination;
+    public bool isLadderPlaced { get; private set; }
 
-    [SerializeField]
-    private Transform PlayerDownDestination;
+    private PlayerController player;
 
-    [SerializeField]
-    private Transform PlayerDownDestination2;
 
-    [SerializeField]
-    private GameObject Player;
+    
 
-    [SerializeField]
-    private bool isUpLadder; //Esto estara en el player controller
 
-    [SerializeField]
-    private float speed;
-
-    [SerializeField]
-    private bool isLadderPlaced;
-
-    [SerializeField]
-    private bool canInteract;
-
-    private TakeObjects player;
-
-    private Keyitem item;
-
-    private bool takingLadder = false;
-    private bool takefirstRoute = false;
-    private bool takeSecondRoute = false;
-    private bool takeThirdRoute = false;
 
     private void Awake()
     {
-        player = FindObjectOfType<TakeObjects>();
+        player = FindObjectOfType<PlayerController>();
+       
     }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            EnterTheWall();
-        }
-        
-    }
-    private void OnTriggerExit(Collider other) 
-    {
-        if (other.CompareTag("Player"))
-        {
-            ExitTheWall();
-        }
-    }
+ 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q) && canInteract)
-        {
-            switch (wallType)
-            {
-                case WallType.DESTRUCTIBLE:
-                    DestroyWall();
-                    break;
-                case WallType.STAIRS:
-                    if (!isLadderPlaced)
-                    {
-                        PlaceStairs();
-                        item.StopPhysics();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
-        if(Input.GetKeyDown(KeyCode.E) && isLadderPlaced && canInteract && !takingLadder)
+        if(Input.GetKeyDown(KeyCode.E) && isLadderPlaced)
         {
-            TakeLadder();
+            //StartClimbLadder();
         } 
 
-        if(takingLadder)
-        {
-            Moving();
-        }
     } 
 
-    private void PlaceStairs()
+    public void PlaceLadder(Keyitem item)
     {
-        necesaryObjectCanvas.SetActive(false);
-        item.transform.position = LadderDestination.position;
-        isLadderPlaced = true;
-        player.ReleaseObject();
-        necesaryObjectCanvas.SetActive(true);
+        if (!isLadderPlaced)
+        {
+            item.GetComponent<Collider>().enabled = false;
+            necessaryObjectCanvas.SetActive(false);
+            item.transform.position = LadderDestination.position;
+            isLadderPlaced = true;
+            player.objectsController.ReleaseObject();
+            necessaryObjectCanvas.SetActive(true);
+            item.StopPhysics();
+        }
+        
+
     }
 
     private void DestroyWall()
     {
-        necesaryObjectCanvas.SetActive(false);
+        necessaryObjectCanvas.SetActive(false);
         Destroy(gameObject);
     }
 
-    private void TakeLadder()   
+    private void OnTriggerEnter(Collider other)
     {
-        takingLadder = true;
-        takefirstRoute = true;
-    }
-
-    private void EnterTheWall()
-    {
-        item = player.GetItems();
-        necesaryObjectCanvas.SetActive(true);
-
-        if (necesaryItem.GetItem() == item.GetItem().GetItem())
+        if (other.CompareTag("Player") && !isLadderPlaced)
         {
-            switch (necesaryItem.GetItem())
-            {
-
-                case KeyItems.keyItem.Ladder:
-                    if (!isLadderPlaced)
-                    {
-                        canInteract = true;
-                    }
-                    break;
-                case KeyItems.keyItem.Axe:
-                case KeyItems.keyItem.ScrewDriver:
-                case KeyItems.keyItem.Hammer:
-                    canInteract = true;
-                    break;
-                default:
-                    break;
-            }
-        }
-        else
-        {
-            //Ensenyar el canvas necesario en una posicion fija
-            canInteract = false;
+            necessaryObjectCanvas.SetActive(true);
         }
 
-
     }
-    
-    private void ExitTheWall()
+    private void OnTriggerExit(Collider other)
     {
-        canInteract = false;
-        necesaryObjectCanvas.SetActive(false);
-    }
-    public void SetLadder()
-    {
-        Debug.Log("False");
-        isLadderPlaced = false;      
-    }
-
-    private void Moving()
-    {
-        if(!isUpLadder)
+        if (other.CompareTag("Player"))
         {
-            Player.transform.SetParent(walls.transform);
-            if(takefirstRoute)
-            {
-                Player.transform.position = Vector3.MoveTowards(Player.transform.position, PlayerDownDestination.position, speed * Time.deltaTime);
-                if(Player.transform.position == PlayerDownDestination.position)
-                {
-                    takeSecondRoute = true;
-                    takefirstRoute = false;
-                }      
-            }
-            else if(takeSecondRoute)
-            {
-                Player.transform.position = Vector3.MoveTowards(Player.transform.position, PlayerUpDestination.position, speed * Time.deltaTime);
-                if (Player.transform.position == PlayerUpDestination.position)
-                {
-                    takeSecondRoute = false;
-                    takeThirdRoute = true;
-                }                   
-            }
-            else if(takeThirdRoute)
-            {
-                Player.transform.position = Vector3.MoveTowards(Player.transform.position, PlayerDownDestination2.position, speed * Time.deltaTime);
-                if (Player.transform.position == PlayerDownDestination2.position)
-                {
-                   // takingLadder = false;
-                    takeThirdRoute = false;
-                }
-            }                  
-        }
-        else
-        {
-            if (takefirstRoute)
-            {
-                Player.transform.position = Vector3.MoveTowards(Player.transform.position, PlayerDownDestination2.position, speed * Time.deltaTime);
-                takeSecondRoute = true;
-                takefirstRoute = false;
-
-            }
-            else if (takeSecondRoute)
-            {
-                Player.transform.position = Vector3.MoveTowards(Player.transform.position, PlayerDownDestination.position, speed * Time.deltaTime);
-                takeSecondRoute = false;
-                takeThirdRoute = true;
-            }
-            else if (takeThirdRoute)
-            {
-                Player.transform.position = Vector3.MoveTowards(Player.transform.position, PlayerDownDestination.position, speed * Time.deltaTime);
-                //takingLadder = false;
-                takeThirdRoute = false;
-            }
+            necessaryObjectCanvas.SetActive(false);
         }
     }
+
 }
