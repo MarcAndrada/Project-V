@@ -16,6 +16,9 @@ public class WallInteractions : MonoBehaviour
     private GameObject allow;
 
     [SerializeField]
+    private GameObject walls;
+
+    [SerializeField]
     private GameObject prohibited;
 
     [SerializeField]
@@ -26,6 +29,9 @@ public class WallInteractions : MonoBehaviour
 
     [SerializeField]
     private Transform PlayerDownDestination;
+
+    [SerializeField]
+    private Transform PlayerDownDestination2;
 
     [SerializeField]
     private GameObject Player;
@@ -47,10 +53,14 @@ public class WallInteractions : MonoBehaviour
 
     private Keyitem item;
 
+    private bool takingLadder = false;
+    private bool takefirstRoute = false;
+    private bool takeSecondRoute = false;
+    private bool takeThirdRoute = false;
+
     private void Awake()
     {
         objectTaken = GameObject.FindObjectOfType<TakeObjects>();
-        //keyItems = GameObject.FindObjectOfType<KeyItems>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -84,9 +94,13 @@ public class WallInteractions : MonoBehaviour
                 DestroyWall();
             }
         }
-        else if(Input.GetKeyDown("e") && canTakeLadder && canInteract)
+        else if(Input.GetKeyDown("e") && canTakeLadder && canInteract && !takingLadder)
         {
             TakeLadder();
+        } 
+        if(takingLadder)
+        {
+            Moving();
         }
     } 
 
@@ -109,16 +123,8 @@ public class WallInteractions : MonoBehaviour
 
     private void TakeLadder()   
     {
-        if(!isUpLadder)
-        {
-            Player.transform.position = PlayerUpDestination.position;
-            isUpLadder = true;
-        }
-        else if (isUpLadder)
-        {
-            Player.transform.position = PlayerDownDestination.position;
-            isUpLadder = false;
-        }
+        takingLadder = true;
+        takefirstRoute = true;
     }
 
     private void EnterTheWall()
@@ -151,5 +157,67 @@ public class WallInteractions : MonoBehaviour
         canInteract = false;
         allow.SetActive(false);
         prohibited.SetActive(false);
+    }
+    public void SetLadder()
+    {
+        Debug.Log("False");
+        canTakeLadder = false;      
+    }
+
+    private void Moving()
+    {
+        if(!isUpLadder)
+        {
+            Player.transform.SetParent(walls.transform);
+            if(takefirstRoute)
+            {
+                Player.transform.position = Vector3.MoveTowards(Player.transform.position, PlayerDownDestination.position, speed * Time.deltaTime);
+                if(Player.transform.position == PlayerDownDestination.position)
+                {
+                    takeSecondRoute = true;
+                    takefirstRoute = false;
+                }      
+            }
+            else if(takeSecondRoute)
+            {
+                Player.transform.position = Vector3.MoveTowards(Player.transform.position, PlayerUpDestination.position, speed * Time.deltaTime);
+                if (Player.transform.position == PlayerUpDestination.position)
+                {
+                    takeSecondRoute = false;
+                    takeThirdRoute = true;
+                }                   
+            }
+            else if(takeThirdRoute)
+            {
+                Player.transform.position = Vector3.MoveTowards(Player.transform.position, PlayerDownDestination2.position, speed * Time.deltaTime);
+                if (Player.transform.position == PlayerDownDestination2.position)
+                {
+                   // takingLadder = false;
+                    takeThirdRoute = false;
+                }
+            }                  
+        }
+        else
+        {
+            if (takefirstRoute)
+            {
+                Player.transform.position = Vector3.MoveTowards(Player.transform.position, PlayerDownDestination2.position, speed * Time.deltaTime);
+                takeSecondRoute = true;
+                takefirstRoute = false;
+
+            }
+            else if (takeSecondRoute)
+            {
+                Player.transform.position = Vector3.MoveTowards(Player.transform.position, PlayerDownDestination.position, speed * Time.deltaTime);
+                takeSecondRoute = false;
+                takeThirdRoute = true;
+            }
+            else if (takeThirdRoute)
+            {
+                Player.transform.position = Vector3.MoveTowards(Player.transform.position, PlayerDownDestination.position, speed * Time.deltaTime);
+                //takingLadder = false;
+                takeThirdRoute = false;
+            }
+        }
     }
 }

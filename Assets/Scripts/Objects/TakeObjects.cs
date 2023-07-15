@@ -21,9 +21,15 @@ public class TakeObjects : MonoBehaviour
     private LayerMask objectLayer; 
     private Rigidbody pickedObjectRB;
     private Collider pickedObjectCollider;
+    [SerializeField]
+    private WallInteractions interactions;
 
     private Keyitem item;
 
+    private void Awake()
+    {
+        //interactions = GameObject.FindObjectOfType<WallInteractions>();
+    }
     private void Update()
     {
         if(Input.GetKeyDown("f") && !pickedObject)
@@ -34,13 +40,13 @@ public class TakeObjects : MonoBehaviour
                 TakeNearestObject(nearestObject);
             }
         }
-        //else if (Input.GetKeyUp("f") && pickedObject)
-        //{
-        //    ReleaseObject();
-        //}
+        else if (Input.GetKeyDown("l") && pickedObject)
+        {
+            ReleaseObject();
+        }
     }
 
-    private void TakeNearestObject(GameObject _nearestObject)
+    public void TakeNearestObject(GameObject _nearestObject)
     {
         pickedObject = true;
         _nearestObject.transform.position = handPoint.position;
@@ -58,7 +64,7 @@ public class TakeObjects : MonoBehaviour
         pickedObjectCollider.enabled = false;
         // Hacerlo hijo
         _nearestObject.transform.SetParent(handPoint.transform);
-      
+        interactions.SetLadder();
     }
     private GameObject CreateCollider()
     {
