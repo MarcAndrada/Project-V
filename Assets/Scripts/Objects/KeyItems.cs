@@ -5,15 +5,15 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New KeyObject", menuName = "KeyObject")]
 public class KeyItems : ScriptableObject
 {
-    private enum keyItem { Axe, Ladder, ScrewDriver, Hammer};
+    public enum keyItem { Axe, Ladder, ScrewDriver, Hammer};
 
     [SerializeField]
     private keyItem items;
 
 
 
-    public string GetItem()
+    public keyItem GetItem()
     {
-        return items.ToString();
+        return items;
     }
 }

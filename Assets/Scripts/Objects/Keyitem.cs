@@ -11,7 +11,7 @@ public class Keyitem : MonoBehaviour
 
     private void Start()
     {
-        rb= GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
     }
 
     public KeyItems GetItem()
@@ -19,7 +19,7 @@ public class Keyitem : MonoBehaviour
         return item;
     }
 
-    public void SetRb()
+    public void StopPhysics()
     {
         rb.isKinematic = true;
     }

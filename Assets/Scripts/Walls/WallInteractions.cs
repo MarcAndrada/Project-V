@@ -6,20 +6,18 @@ using UnityEngine.UIElements;
 
 public class WallInteractions : MonoBehaviour
 {
-    [SerializeField]
-    Keyitem keyItems;
+    public enum WallType { DESTRUCTIBLE, STAIRS };
+
+    public WallType wallType;
 
     [SerializeField]
-    Keyitem stairs;
+    KeyItems necesaryItem;
 
     [SerializeField]
-    private GameObject allow;
+    private GameObject necesaryObjectCanvas;
 
     [SerializeField]
     private GameObject walls;
-
-    [SerializeField]
-    private GameObject prohibited;
 
     [SerializeField]
     private Transform LadderDestination;
@@ -43,13 +41,12 @@ public class WallInteractions : MonoBehaviour
     private float speed;
 
     [SerializeField]
-    private bool canTakeLadder;
+    private bool isLadderPlaced;
 
     [SerializeField]
     private bool canInteract;
 
-    [SerializeField]
-    private TakeObjects objectTaken;
+    private TakeObjects player;
 
     private Keyitem item;
 
@@ -60,13 +57,11 @@ public class WallInteractions : MonoBehaviour
 
     private void Awake()
     {
-        objectTaken = GameObject.FindObjectOfType<TakeObjects>();
+        player = FindObjectOfType<TakeObjects>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        item = objectTaken.GetItems();
-        Debug.Log(item);
         if (other.CompareTag("Player"))
         {
             EnterTheWall();
@@ -82,42 +77,48 @@ public class WallInteractions : MonoBehaviour
     }
     private void Update()
     {
-        if (canInteract && Input.GetKeyDown("q") && !canTakeLadder)
+        if (Input.GetKeyDown(KeyCode.Q) && canInteract)
         {
-            if(keyItems == stairs)
+            switch (wallType)
             {
-                MoveStairs();
-                item.SetRb();
-            }
-            else
-            {
-                DestroyWall();
+                case WallType.DESTRUCTIBLE:
+                    DestroyWall();
+                    break;
+                case WallType.STAIRS:
+                    if (!isLadderPlaced)
+                    {
+                        PlaceStairs();
+                        item.StopPhysics();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
-        else if(Input.GetKeyDown("e") && canTakeLadder && canInteract && !takingLadder)
+
+        if(Input.GetKeyDown(KeyCode.E) && isLadderPlaced && canInteract && !takingLadder)
         {
             TakeLadder();
         } 
+
         if(takingLadder)
         {
             Moving();
         }
     } 
 
-    private void MoveStairs()
+    private void PlaceStairs()
     {
-        allow.SetActive(false);
-        prohibited.SetActive(false);
+        necesaryObjectCanvas.SetActive(false);
         item.transform.position = LadderDestination.position;
-        canTakeLadder = true;
-        objectTaken.ReleaseObject();
-        allow.SetActive(true);
+        isLadderPlaced = true;
+        player.ReleaseObject();
+        necesaryObjectCanvas.SetActive(true);
     }
 
     private void DestroyWall()
     {
-        allow.SetActive(false);
-        prohibited.SetActive(false);
+        necesaryObjectCanvas.SetActive(false);
         Destroy(gameObject);
     }
 
@@ -129,39 +130,47 @@ public class WallInteractions : MonoBehaviour
 
     private void EnterTheWall()
     {
-        canInteract = true;
-        if (keyItems == item && !canTakeLadder && objectTaken.GetPickedObject())
+        item = player.GetItems();
+        necesaryObjectCanvas.SetActive(true);
+
+        if (necesaryItem.GetItem() == item.GetItem().GetItem())
         {
-            allow.SetActive(true);
-            prohibited.SetActive(false); //Por si acaso
-        }
-        else if (canTakeLadder)
-        {  
-            allow.SetActive(true);
-        }
-        else if (keyItems != item)
-        {
-            canInteract = false;
-            prohibited.SetActive(true);
+            switch (necesaryItem.GetItem())
+            {
+
+                case KeyItems.keyItem.Ladder:
+                    if (!isLadderPlaced)
+                    {
+                        canInteract = true;
+                    }
+                    break;
+                case KeyItems.keyItem.Axe:
+                case KeyItems.keyItem.ScrewDriver:
+                case KeyItems.keyItem.Hammer:
+                    canInteract = true;
+                    break;
+                default:
+                    break;
+            }
         }
         else
         {
+            //Ensenyar el canvas necesario en una posicion fija
             canInteract = false;
-            allow.SetActive(false);
-            prohibited.SetActive(false);
         }
+
+
     }
     
     private void ExitTheWall()
     {
         canInteract = false;
-        allow.SetActive(false);
-        prohibited.SetActive(false);
+        necesaryObjectCanvas.SetActive(false);
     }
     public void SetLadder()
     {
         Debug.Log("False");
-        canTakeLadder = false;      
+        isLadderPlaced = false;      
     }
 
     private void Moving()

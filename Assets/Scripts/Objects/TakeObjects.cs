@@ -99,6 +99,7 @@ public class TakeObjects : MonoBehaviour
         pickedObjectRB.transform.SetParent(null);
         pickedObjectRB = null; 
         pickedObjectCollider = null;
+        item = null;
     }
 
     public bool GetPickedObject()
