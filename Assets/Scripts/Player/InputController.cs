@@ -13,7 +13,8 @@ public class InputController : MonoBehaviour
 
     [SerializeField]
     private Collider itemCollider;
-
+    [SerializeField]
+    private Collider wallCollider;
 
     private void Awake()
     {
@@ -37,6 +38,8 @@ public class InputController : MonoBehaviour
             case PlayerMovementController.MovementState.GRABBING_LIGHT:
                 if (obj.action.WasPerformedThisFrame())
                 {
+                    wallCollider.enabled = true;
+                    Invoke("DisableWallCollider", 0.3f);
                     pController.objectsController.CheckCanTakeObject();
                     if (pController.objectsController.item != null)
                     {
@@ -57,7 +60,7 @@ public class InputController : MonoBehaviour
                 else if (obj.action.WasReleasedThisFrame())
                 {
                     pController.objectsController.ReleaseObject();
-                    pController.movementController.ChangeState(PlayerMovementController.MovementState.WALKING);
+                   pController.movementController.ChangeState(PlayerMovementController.MovementState.WALKING);
                 }
                 break;
             default:
@@ -73,7 +76,7 @@ public class InputController : MonoBehaviour
         {
             case PlayerMovementController.MovementState.WALKING:
             case PlayerMovementController.MovementState.GRABBING_LIGHT:
-                if (pController.ladderController.nearToLadder)
+                if (pController.ladderController.nearToLadder && pController.ladderController.nearestLadder.isLadderPlaced)
                 {
                     //Subir a la escalera
                     pController.ladderController.StartClimbLadder();
@@ -133,5 +136,10 @@ public class InputController : MonoBehaviour
     private void DisableCollider()
     {
         itemCollider.enabled = false;
+    }
+
+    private void DisableWallCollider()
+    {
+        wallCollider.enabled = false;
     }
 }

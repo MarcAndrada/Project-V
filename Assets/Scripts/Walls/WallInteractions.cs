@@ -79,7 +79,13 @@ public class WallInteractions : MonoBehaviour
                 DestroyWall();
             }         
         }
-
+        if(isLadderPlaced)
+        {
+            if (other.CompareTag("WallInteraction"))
+            {
+                isLadderPlaced = false;
+            }
+        }
     }
     private void OnTriggerExit(Collider other)
     {

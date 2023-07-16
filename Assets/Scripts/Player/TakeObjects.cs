@@ -62,15 +62,15 @@ public class TakeObjects : MonoBehaviour
     {
         pickedObject = true;
         _nearestObject.transform.position = handPoint.position;
-
         // Desactivar collision y fisicas
         pickedObjectRB = _nearestObject.GetComponent<Rigidbody>();
         pickedObjectCollider = _nearestObject.GetComponent<Collider>();
-        if(_nearestObject.tag == "KeyItem")
+        if(_nearestObject.tag == "KeyItem" || _nearestObject.tag == "MoveItem")
         {
             item = _nearestObject.GetComponent<MoveItem>();
             item.GetItem();
         }
+       
 
         pickedObjectRB.isKinematic = true;
         pickedObjectCollider.enabled = false;
@@ -80,7 +80,6 @@ public class TakeObjects : MonoBehaviour
 
     public void ReleaseObject()
     {
-        Debug.Log("Salgo");
         if (pickedObject)
         {
             pickedObject = false;

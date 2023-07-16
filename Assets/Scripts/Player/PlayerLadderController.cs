@@ -84,31 +84,32 @@ public class PlayerLadderController : MonoBehaviour
     }
     public void ClimbLadder()
     {
-        if (!goingDown)
-        {
-            climbProcess += climbSpeed * Time.fixedDeltaTime;
-            //Movemos al player
-            transform.position = Vector3.Lerp(downPos[nextPosIndex], upPos, climbProcess);
-
-            //Comprobamos si ha llegado a su posicion
-            if (climbProcess >= 1)
+            if (!goingDown)
             {
-                //En caso de que este subiendo
-                ChangeDestinyIndex();
-            }
-        }
-        else
-        {
-            climbProcess += climbSpeed * Time.fixedDeltaTime;
-            //Movemos al player
-            transform.position = Vector3.Lerp(upPos, downPos[nextPosIndex], climbProcess);
+                climbProcess += climbSpeed * Time.fixedDeltaTime;
+                //Movemos al player
+                transform.position = Vector3.Lerp(downPos[nextPosIndex], upPos, climbProcess);
 
-            //Comprobamos si ha llegado a su posicion
-            if (climbProcess >= 1)
-            {
-                StopClimb();
+                //Comprobamos si ha llegado a su posicion
+                if (climbProcess >= 1)
+                {
+                    //En caso de que este subiendo
+                    ChangeDestinyIndex();
+                }
             }
-        }
+            else
+            {
+                climbProcess += climbSpeed * Time.fixedDeltaTime;
+                //Movemos al player
+                transform.position = Vector3.Lerp(upPos, downPos[nextPosIndex], climbProcess);
+
+                //Comprobamos si ha llegado a su posicion
+                if (climbProcess >= 1)
+                {
+                    StopClimb();
+                }
+            }
+        
     }
     private void ChangeDestinyIndex() 
     {
