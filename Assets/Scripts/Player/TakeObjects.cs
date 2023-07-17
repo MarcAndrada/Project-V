@@ -58,6 +58,15 @@ public class TakeObjects : MonoBehaviour
         return _nearestObject;
     }
 
+    private void ChechLadderAtached(MoveItem _nearestObject)
+    {
+        if(_nearestObject.GetItem().GetItem() == MovingItems.Item.Ladder && item.AtachedWall()  != null)
+        {
+            item.AtachedWall().SetLadder(false);
+            item.SetWall(null);
+        }
+    }
+
     private void TakeNearestObject(GameObject _nearestObject)
     {
         pickedObject = true;
@@ -68,10 +77,8 @@ public class TakeObjects : MonoBehaviour
         if(_nearestObject.tag == "KeyItem" || _nearestObject.tag == "MoveItem")
         {
             item = _nearestObject.GetComponent<MoveItem>();
-            item.GetItem();
+            ChechLadderAtached(item);
         }
-       
-
         pickedObjectRB.isKinematic = true;
         pickedObjectCollider.enabled = false;
         // Hacerlo hijo

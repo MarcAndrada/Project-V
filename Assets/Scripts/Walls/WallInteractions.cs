@@ -55,6 +55,7 @@ public class WallInteractions : MonoBehaviour
             player.objectsController.ReleaseObject();
             necessaryObjectCanvas.SetActive(true);
             item.StopPhysics();
+            item.SetWall(this);
         }
         
 
@@ -64,6 +65,11 @@ public class WallInteractions : MonoBehaviour
     {
         necessaryObjectCanvas.SetActive(false);
         Destroy(gameObject);
+    }
+
+    public void SetLadder(bool isLaddered)
+    {
+        isLadderPlaced = isLaddered;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -78,13 +84,6 @@ public class WallInteractions : MonoBehaviour
             {
                 DestroyWall();
             }         
-        }
-        if(isLadderPlaced)
-        {
-            if (other.CompareTag("WallInteraction"))
-            {
-                isLadderPlaced = false;
-            }
         }
     }
     private void OnTriggerExit(Collider other)

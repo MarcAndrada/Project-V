@@ -13,8 +13,6 @@ public class InputController : MonoBehaviour
 
     [SerializeField]
     private Collider itemCollider;
-    [SerializeField]
-    private Collider wallCollider;
 
     private void Awake()
     {
@@ -38,8 +36,6 @@ public class InputController : MonoBehaviour
             case PlayerMovementController.MovementState.GRABBING_LIGHT:
                 if (obj.action.WasPerformedThisFrame())
                 {
-                    wallCollider.enabled = true;
-                    Invoke("DisableWallCollider", 0.3f);
                     pController.objectsController.CheckCanTakeObject();
                     if (pController.objectsController.item != null)
                     {
@@ -138,8 +134,4 @@ public class InputController : MonoBehaviour
         itemCollider.enabled = false;
     }
 
-    private void DisableWallCollider()
-    {
-        wallCollider.enabled = false;
-    }
 }
