@@ -21,6 +21,10 @@ public class TakeObjects : MonoBehaviour
     private LayerMask objectLayer; 
     private Rigidbody pickedObjectRB;
     private Collider pickedObjectCollider;
+    [SerializeField]
+    private float force;
+
+    private Vector3 scale;
 
     public MoveItem item { get; private set; }
 
@@ -29,6 +33,17 @@ public class TakeObjects : MonoBehaviour
         //interactions = GameObject.FindObjectOfType<WallInteractions>();
     }
 
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.C) && pickedObject)
+        {
+            pickedObjectRB.transform.SetParent(null);
+            pickedObjectRB.isKinematic = false;
+            pickedObjectRB.AddForce(transform.forward * force, ForceMode.Impulse);
+            pickedObjectCollider.enabled = true;
+            pickedObjectRB.transform.localScale = scale;
+        }
+    }
     public void CheckCanTakeObject() 
     {
         GameObject nearestObject = CheckNearestObject();
@@ -81,6 +96,8 @@ public class TakeObjects : MonoBehaviour
         }
         pickedObjectRB.isKinematic = true;
         pickedObjectCollider.enabled = false;
+        scale = _nearestObject.transform.localScale;
+        pickedObjectRB.rotation = handPoint.rotation;
         // Hacerlo hijo
         _nearestObject.transform.SetParent(handPoint.transform);
     }
@@ -94,6 +111,7 @@ public class TakeObjects : MonoBehaviour
             // Activar collision y fisicas y dejar de ser hijo 
             pickedObjectRB.isKinematic = false;
             pickedObjectCollider.enabled = true;
+            pickedObjectRB.transform.localScale = scale;
             pickedObjectRB.transform.SetParent(null);
             pickedObjectRB = null;
             pickedObjectCollider = null;

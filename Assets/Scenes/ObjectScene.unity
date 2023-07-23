@@ -482,6 +482,7 @@ MonoBehaviour:
   objectLayer:
     serializedVersion: 2
     m_Bits: 64
+  force: 10
 --- !u!114 &199634577 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1602487663727716792, guid: 1f8cd234f9e632a489fac66371382760, type: 3}
@@ -2536,6 +2537,7 @@ MonoBehaviour:
   objectLayer:
     serializedVersion: 2
     m_Bits: 64
+  force: 0
 --- !u!1 &1985835735
 GameObject:
   m_ObjectHideFlags: 0
