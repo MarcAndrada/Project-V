@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerMovementController : MonoBehaviour
 {
-    public enum MovementState { WALKING, GRABBING_LIGHT, GRABBING_HEAVY_S, GRABBING_HEAVY_M, STUNNED, INTERACTING, CLIMBING_LADDER }
+    public enum MovementState { WALKING, GRABBING_LIGHT, GRABBING_HEAVY_S, GRABBING_HEAVY_M, STUNNED, INTERACTING, CLIMBING_LADDER, THROWNING_ITEM }
     public MovementState currentMovementState = MovementState.WALKING;
     
     PlayerController playerController;
@@ -19,6 +19,7 @@ public class PlayerMovementController : MonoBehaviour
     private float grabbingHeavyS;
     [SerializeField]
     private float grabbingHeavyM;
+    private float throwSpeed = 0;
     private float speed;
     [SerializeField]
     private float acceleration;
@@ -166,6 +167,8 @@ public class PlayerMovementController : MonoBehaviour
                 break;
             case MovementState.INTERACTING:
                 break;
+            case MovementState.THROWNING_ITEM:
+                break;
             default:
                 break;
         }
@@ -192,6 +195,9 @@ public class PlayerMovementController : MonoBehaviour
             case MovementState.CLIMBING_LADDER:
                 break;
             case MovementState.INTERACTING:
+                break;
+            case MovementState.THROWNING_ITEM:
+                speed = throwSpeed;
                 break;
             default:
                 break;

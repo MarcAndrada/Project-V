@@ -26,22 +26,31 @@ public class TakeObjects : MonoBehaviour
 
     private Vector3 scale;
 
+    PlayerMovementController pController;
+
     public MoveItem item { get; private set; }
 
     private void Awake()
     {
         //interactions = GameObject.FindObjectOfType<WallInteractions>();
+        pController = GetComponent<PlayerMovementController>();
     }
 
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.C) && pickedObject)
         {
+            pController.ChangeState(PlayerMovementController.MovementState.THROWNING_ITEM);       
+        }
+        if(Input.GetKeyUp(KeyCode.C) && pickedObject) 
+        {
+            pController.ChangeState(PlayerMovementController.MovementState.WALKING);
             pickedObjectRB.transform.SetParent(null);
             pickedObjectRB.isKinematic = false;
             pickedObjectRB.AddForce(transform.forward * force, ForceMode.Impulse);
             pickedObjectCollider.enabled = true;
             pickedObjectRB.transform.localScale = scale;
+            pickedObject = false;
         }
     }
     public void CheckCanTakeObject() 
