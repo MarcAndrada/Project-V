@@ -14,6 +14,8 @@ public class MoveItem : MonoBehaviour
 
     private Rigidbody rb;
 
+    private WallInteractions wall;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -41,6 +43,16 @@ public class MoveItem : MonoBehaviour
     private void Score()
     {
         score.SetScore(movingItem.GetScore());
+    }
+
+    public WallInteractions AtachedWall()
+    {
+        return wall;
+    }
+
+    public void SetWall(WallInteractions _wall)
+    {
+        wall= _wall;
     }
 
 }

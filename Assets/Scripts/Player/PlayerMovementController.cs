@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerMovementController : MonoBehaviour
 {
-    public enum MovementState { WALKING, GRABBING_LIGHT, GRABBING_HEAVY_S, GRABBING_HEAVY_M, STUNNED, INTERACTING, CLIMBING_LADDER }
+    public enum MovementState { WALKING, GRABBING_LIGHT, GRABBING_HEAVY_S, GRABBING_HEAVY_M, STUNNED, INTERACTING, CLIMBING_LADDER, THROWNING_ITEM }
     public MovementState currentMovementState = MovementState.WALKING;
     
     PlayerController playerController;
@@ -19,6 +19,7 @@ public class PlayerMovementController : MonoBehaviour
     private float grabbingHeavyS;
     [SerializeField]
     private float grabbingHeavyM;
+    private float throwSpeed = 0;
     private float speed;
     [SerializeField]
     private float acceleration;
@@ -33,8 +34,11 @@ public class PlayerMovementController : MonoBehaviour
     [SerializeField]
     private float knockback;
 
-    
+    [SerializeField]
+    private float rotationSpeed;
     public BoxCollider objectCollider { get; private set; }
+
+    private bool isMoving;
 
 
     private void Awake()
@@ -44,11 +48,13 @@ public class PlayerMovementController : MonoBehaviour
         objectCollider = GetComponent<BoxCollider>();
         objectCollider.enabled = false;
         ChangeState(MovementState.WALKING);
+        isMoving = false    ;
     }
 
     void Update()
     {
         movementDirection = playerController.inputController.movementInput;
+        PlayerRotation();
     }
 
     private void FixedUpdate()
@@ -121,7 +127,9 @@ public class PlayerMovementController : MonoBehaviour
     private void Move()
     {
         Acceleration();
-        rb.velocity = new Vector3(speed * movementDirection.x  * acceleration * Time.deltaTime, 0f, speed * movementDirection.y * acceleration * Time.deltaTime);
+    
+        
+        rb.velocity = new Vector3(speed * movementDirection.x * acceleration * Time.deltaTime, 0f, speed * movementDirection.y * acceleration * Time.deltaTime);
     }
     private void Move(float speedToReduce)
     {
@@ -149,6 +157,18 @@ public class PlayerMovementController : MonoBehaviour
         }
     }
 
+    private void PlayerRotation()
+    {
+        Vector3 movementDirectionToRotate = new Vector3 (movementDirection.x, 0, movementDirection.y);
+        movementDirectionToRotate.Normalize();
+
+        if (movementDirectionToRotate != Vector3.zero)
+        {
+            Quaternion rotation = Quaternion.LookRotation(movementDirectionToRotate, Vector3.up);
+
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+        }
+    }
     public void ChangeState(MovementState currentState)
     {
         switch (currentMovementState)
@@ -165,6 +185,8 @@ public class PlayerMovementController : MonoBehaviour
             case MovementState.CLIMBING_LADDER:
                 break;
             case MovementState.INTERACTING:
+                break;
+            case MovementState.THROWNING_ITEM:
                 break;
             default:
                 break;
@@ -192,6 +214,9 @@ public class PlayerMovementController : MonoBehaviour
             case MovementState.CLIMBING_LADDER:
                 break;
             case MovementState.INTERACTING:
+                break;
+            case MovementState.THROWNING_ITEM:
+                speed = throwSpeed;
                 break;
             default:
                 break;

@@ -14,7 +14,6 @@ public class InputController : MonoBehaviour
     [SerializeField]
     private Collider itemCollider;
 
-
     private void Awake()
     {
         pController = GetComponent<PlayerController>();
@@ -57,7 +56,7 @@ public class InputController : MonoBehaviour
                 else if (obj.action.WasReleasedThisFrame())
                 {
                     pController.objectsController.ReleaseObject();
-                    pController.movementController.ChangeState(PlayerMovementController.MovementState.WALKING);
+                   pController.movementController.ChangeState(PlayerMovementController.MovementState.WALKING);
                 }
                 break;
             default:
@@ -73,7 +72,7 @@ public class InputController : MonoBehaviour
         {
             case PlayerMovementController.MovementState.WALKING:
             case PlayerMovementController.MovementState.GRABBING_LIGHT:
-                if (pController.ladderController.nearToLadder)
+                if (pController.ladderController.nearToLadder && pController.ladderController.nearestLadder.isLadderPlaced)
                 {
                     //Subir a la escalera
                     pController.ladderController.StartClimbLadder();
@@ -134,4 +133,5 @@ public class InputController : MonoBehaviour
     {
         itemCollider.enabled = false;
     }
+
 }
