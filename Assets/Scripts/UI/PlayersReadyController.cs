@@ -19,10 +19,11 @@ public class PlayersReadyController : MonoBehaviour
     private GameObject startGameButton;
 
     [Space, SerializeField]
-    private GameObject[] playerSpawnPos;
+    private GameObject[] playerUIPos;
 
     private List<PlayerInput> players;
-    private List<Vector3> playersStartPos;
+    [Space, SerializeField]
+    private Transform[] playersStartPos;
 
     private Vector3 camStarterPos;
 
@@ -33,7 +34,6 @@ public class PlayersReadyController : MonoBehaviour
         camStarterPos = cameraController.transform.position;
         cameraController.transform.position = new Vector3(0,10000,0);
         players = new List<PlayerInput>();
-        playersStartPos = new List<Vector3>();
         CheckIfShowStartGameButton();
     }
 
@@ -41,7 +41,6 @@ public class PlayersReadyController : MonoBehaviour
     public void AddPlayer(PlayerInput _newPlayer)
     {
         players.Add(_newPlayer);
-        playersStartPos.Add(_newPlayer.transform.position);
         PlacePlayerOnMenu(players.IndexOf(_newPlayer));
         SetPlayerInputEvents(_newPlayer);
         CheckIfShowStartGameButton();
@@ -52,7 +51,7 @@ public class PlayersReadyController : MonoBehaviour
         //Ocultar los botones de unirse en el lado que se 
         joinGameButtonsUI[_playerIndex].SetActive(false);
         //mover el player al punto exacto del menu
-        players[_playerIndex].transform.position = playerSpawnPos[_playerIndex].transform.position;
+        players[_playerIndex].transform.position = playerUIPos[_playerIndex].transform.position;
     }
     private void SetPlayerInputEvents(PlayerInput _playerInput)
     {
@@ -67,7 +66,6 @@ public class PlayersReadyController : MonoBehaviour
         Destroy(players[playerToDestroyID].gameObject);
         //Lo quitamos de las listas
         players.RemoveAt(playerToDestroyID);
-        playersStartPos.RemoveAt(playerToDestroyID);
         //Hacemos aparecer de nuevo la UI
         joinGameButtonsUI[playerToDestroyID].SetActive(true);
     }
@@ -98,7 +96,7 @@ public class PlayersReadyController : MonoBehaviour
         cameraController.enabled = true;
         for (int i = 0; i < players.Count; i++)
         {
-            players[i].transform.position = playersStartPos[i];
+            players[i].transform.position = playersStartPos[i].position;
             players[i].actions.FindActionMap("PlayerSelectMenu").Disable();
             players[i].actions.FindActionMap("Gameplay").Enable();
             

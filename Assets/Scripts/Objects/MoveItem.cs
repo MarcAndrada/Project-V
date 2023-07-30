@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static MoveItem;
-using static UnityEditor.Progress;
 
 public class MoveItem : MonoBehaviour
 {
@@ -12,7 +10,12 @@ public class MoveItem : MonoBehaviour
     [SerializeField]
     Score score;
 
-    private Rigidbody rb;
+    protected Rigidbody rb;
+
+    private WallInteractions wall;
+
+    [HideInInspector]
+    public bool picked = false;
 
     private void Start()
     {
@@ -29,18 +32,29 @@ public class MoveItem : MonoBehaviour
         rb.isKinematic = true;
     }
 
+    private void Score()
+    {
+        score.SetScore(movingItem.GetScore());
+    }
+
+    public WallInteractions AtachedWall()
+    {
+        return wall;
+    }
+    public void SetWall(WallInteractions _wall)
+    {
+        wall= _wall;
+    }
+
+
     private void OnCollisionEnter(Collision collision)
     {
-        if(movingItem.GetType() != MovingItems.ItemType.key && collision.collider.CompareTag("Truck"))
+        if (movingItem.GetItemType() != MovingItems.ItemType.key && collision.collider.CompareTag("Truck"))
         {
             Score();
             Destroy(gameObject);
         }
     }
 
-    private void Score()
-    {
-        score.SetScore(movingItem.GetScore());
-    }
 
 }

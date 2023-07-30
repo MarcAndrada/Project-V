@@ -16,7 +16,7 @@ public class MovingItems : ScriptableObject
     [SerializeField]
     private int score;
 
-    public ItemType GetType()
+    public ItemType GetItemType()
     {
         return type;
     }

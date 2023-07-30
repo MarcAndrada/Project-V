@@ -55,6 +55,7 @@ public class WallInteractions : MonoBehaviour
             player.objectsController.ReleaseObject();
             necessaryObjectCanvas.SetActive(true);
             item.StopPhysics();
+            item.SetWall(this);
         }
         
 
@@ -66,6 +67,11 @@ public class WallInteractions : MonoBehaviour
         Destroy(gameObject);
     }
 
+    public void SetLadder(bool isLaddered)
+    {
+        isLadderPlaced = isLaddered;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") && !isLadderPlaced)
@@ -74,12 +80,11 @@ public class WallInteractions : MonoBehaviour
         }
         if(other.CompareTag("InteractionObject"))
         {
-            if(player.objectsController.item.GetItem().GetItem() == necessaryItem)
+            if(player.objectsController.handItem.GetItem().GetItem() == necessaryItem)
             {
                 DestroyWall();
             }         
         }
-
     }
     private void OnTriggerExit(Collider other)
     {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerMovementController : MonoBehaviour
 {
-    public enum MovementState { WALKING, GRABBING_LIGHT, GRABBING_HEAVY_S, GRABBING_HEAVY_M, STUNNED, INTERACTING, CLIMBING_LADDER }
+    public enum MovementState { WALKING, GRABBING_LIGHT, GRABBING_HEAVY_S, GRABBING_HEAVY_M, STUNNED, INTERACTING, CLIMBING_LADDER, THROWNING_ITEM }
     public MovementState currentMovementState = MovementState.WALKING;
     
     PlayerController playerController;
@@ -19,6 +19,7 @@ public class PlayerMovementController : MonoBehaviour
     private float grabbingHeavyS;
     [SerializeField]
     private float grabbingHeavyM;
+    private float throwSpeed = 0;
     private float speed;
     [SerializeField]
     private float acceleration;
@@ -27,9 +28,6 @@ public class PlayerMovementController : MonoBehaviour
     [SerializeField]
     private Vector2 movementDirection;
 
-
-    private Rigidbody rb;
-
     [SerializeField]
     private float knockback;
 
@@ -37,23 +35,18 @@ public class PlayerMovementController : MonoBehaviour
     private float rotationSpeed;
     public BoxCollider objectCollider { get; private set; }
 
-    private bool isMoving;
-
 
     private void Awake()
     {
-        rb = GetComponent<Rigidbody>();
         playerController = GetComponent<PlayerController>();
         objectCollider = GetComponent<BoxCollider>();
         objectCollider.enabled = false;
         ChangeState(MovementState.WALKING);
-        isMoving = false    ;
     }
 
     void Update()
     {
         movementDirection = playerController.inputController.movementInput;
-        PlayerRotation();
     }
 
     private void FixedUpdate()
@@ -62,9 +55,14 @@ public class PlayerMovementController : MonoBehaviour
         {
             case MovementState.WALKING:
                 Walking();
+                PlayerRotation();
+
                 break;
             case MovementState.GRABBING_HEAVY_S:
             case MovementState.GRABBING_HEAVY_M:
+                Grabbing();
+                PlayerRotation();
+                break;
             case MovementState.GRABBING_LIGHT:
                 Grabbing();
                 break;
@@ -92,7 +90,7 @@ public class PlayerMovementController : MonoBehaviour
 
     private void Stunned()
     {
-        if (rb.velocity.magnitude < 1f)
+        if (playerController.rb.velocity.magnitude < 1f)
             ChangeState(MovementState.WALKING);
         else
         {
@@ -126,15 +124,15 @@ public class PlayerMovementController : MonoBehaviour
     private void Move()
     {
         Acceleration();
-    
-        
-        rb.velocity = new Vector3(speed * movementDirection.x * acceleration * Time.deltaTime, 0f, speed * movementDirection.y * acceleration * Time.deltaTime);
+
+
+        playerController.rb.velocity = new Vector3(speed * movementDirection.x * acceleration * Time.deltaTime, 0f, speed * movementDirection.y * acceleration * Time.deltaTime);
     }
     private void Move(float speedToReduce)
     {
         float reducedSpeed = speed - speedToReduce;
         Acceleration();
-        rb.velocity = new Vector3(reducedSpeed * movementDirection.x * Time.deltaTime, 0f, reducedSpeed * movementDirection.y * Time.deltaTime);
+        playerController.rb.velocity = new Vector3(reducedSpeed * movementDirection.x * Time.deltaTime, 0f, reducedSpeed * movementDirection.y * Time.deltaTime);
     }
     
 
@@ -142,8 +140,8 @@ public class PlayerMovementController : MonoBehaviour
     {
         Vector3 vectorToKnockBack = fireCenter - transform.position;
         ChangeState(MovementState.STUNNED);
-        rb.velocity = Vector3.zero;
-        rb.AddForce(vectorToKnockBack.normalized * knockback, ForceMode.Impulse);
+        playerController.rb.velocity = Vector3.zero;
+        playerController.rb.AddForce(vectorToKnockBack.normalized * knockback, ForceMode.Impulse);
         Invoke("Stunned", 0.2f);
     }
 
@@ -165,7 +163,7 @@ public class PlayerMovementController : MonoBehaviour
         {
             Quaternion rotation = Quaternion.LookRotation(movementDirectionToRotate, Vector3.up);
 
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, rotationSpeed * Time.fixedDeltaTime);
         }
     }
     public void ChangeState(MovementState currentState)
@@ -184,6 +182,8 @@ public class PlayerMovementController : MonoBehaviour
             case MovementState.CLIMBING_LADDER:
                 break;
             case MovementState.INTERACTING:
+                break;
+            case MovementState.THROWNING_ITEM:
                 break;
             default:
                 break;
@@ -211,6 +211,9 @@ public class PlayerMovementController : MonoBehaviour
             case MovementState.CLIMBING_LADDER:
                 break;
             case MovementState.INTERACTING:
+                break;
+            case MovementState.THROWNING_ITEM:
+                speed = throwSpeed;
                 break;
             default:
                 break;
