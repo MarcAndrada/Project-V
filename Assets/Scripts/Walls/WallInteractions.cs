@@ -80,7 +80,7 @@ public class WallInteractions : MonoBehaviour
         }
         if(other.CompareTag("InteractionObject"))
         {
-            if(player.objectsController.item.GetItem().GetItem() == necessaryItem)
+            if(player.objectsController.handItem.GetItem().GetItem() == necessaryItem)
             {
                 DestroyWall();
             }         
